@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,9 +12,23 @@ class Loan extends Model
 {
     use HasFactory;
 
+    use HasUuids;
+
     protected $table = 'loan';
 
     protected $primaryKey = 'id';
+
+    protected $fillable = [
+    'customer_id', 
+    'tenure', 
+    'tenure_type',
+    'currency',
+    'amount',
+    'approved_by',
+    'rejected_by',
+    'reject_reason',
+    'status'
+    ];
 
     // A loan belongs to a customer
     public function customer(): BelongsTo
