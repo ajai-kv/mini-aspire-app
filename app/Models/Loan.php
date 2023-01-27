@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Loan extends Model
 {
     use HasFactory;
-
     use HasUuids;
 
     protected $table = 'loan';
@@ -19,15 +18,15 @@ class Loan extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-    'customer_id', 
-    'tenure', 
-    'tenure_type',
-    'currency',
-    'amount',
-    'approved_by',
-    'rejected_by',
-    'reject_reason',
-    'status'
+        'customer_id',
+        'tenure',
+        'tenure_type',
+        'currency',
+        'amount',
+        'approved_by',
+        'rejected_by',
+        'reject_reason',
+        'status',
     ];
 
     // A loan belongs to a customer
@@ -41,5 +40,4 @@ class Loan extends Model
     {
         return $this->hasMany(RepaymentSchedule::class, 'repayment_schedule_id', 'id');
     }
-    
 }
