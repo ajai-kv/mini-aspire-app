@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('profile_picture');
             $table->string('type');
             $table->boolean('is_active')->default(true);
-            $table->timestamp('deleted_at')->nullable();
-            $table->timestamps();
+            $table->timestampTz('deleted_at')->nullable();
+            $table->timestampsTz();
         });
     }
 

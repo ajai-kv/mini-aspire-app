@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('repayment_schedule', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('loan_id');
-            $table->integer('amount');
-            $table->timestamp('due_date');
+            $table->decimal('amount', 25, 10);
+            $table->timestampTz('due_date');
             $table->string('status');
-            $table->timestamp('deleted_at')->nullable();
-            $table->timestamps();
+            $table->timestampTz('deleted_at')->nullable();
+            $table->timestampsTz();
             $table->foreign('loan_id')->references('id')->on('loan');
         });
     }

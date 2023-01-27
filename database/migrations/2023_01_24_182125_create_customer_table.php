@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('customer', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('user_id');
-            $table->string('date_of_birth');
+            $table->date('date_of_birth');
             $table->text('address')->nullable();
             $table->string('identification_document');
             $table->string('document_reference_number')->unique()->nullable();
-            $table->timestamp('deleted_at')->nullable();
-            $table->timestamps();
+            $table->timestampTz('deleted_at')->nullable();
+            $table->timestampsTz();
             $table->foreign('user_id')->references('id')->on('user');
         });
     }

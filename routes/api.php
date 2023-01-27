@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('/loan', [LoanController::class, 'createLoanApplication']);
+
+Route::put('/loan/{loan_number}/approve', [LoanController::class, 'approveLoanApplication']);
