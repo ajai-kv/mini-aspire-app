@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RepaymentSchedule extends Model
 {
     use HasFactory;
-
     use HasUuids;
 
     protected $table = 'repayment_schedule';
@@ -18,10 +17,10 @@ class RepaymentSchedule extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'loan_id', 
-        'amount', 
+        'loan_id',
+        'amount',
         'due_date',
-        'status'
+        'status',
     ];
 
     // A repayment schedule belongs to a loan

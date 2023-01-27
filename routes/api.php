@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::get('/loan', [LoanController::class, 'getLoansByCustomer']);
 Route::post('/loan', [LoanController::class, 'createLoanApplication']);
-
 Route::put('/loan/{loan_number}/approve', [LoanController::class, 'approveLoanApplication']);
+Route::put('/loan/{loan_number}/pay', [LoanController::class, 'receivePaymentOnLoan']);

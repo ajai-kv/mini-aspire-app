@@ -21,7 +21,6 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-
     public function loan(): HasMany
     {
         return $this->hasMany(Loan::class, 'loan_id', 'id');
