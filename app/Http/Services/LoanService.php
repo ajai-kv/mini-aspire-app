@@ -2,6 +2,9 @@
 
 namespace App\Http\Services;
 
+use App\Enums\LoanPaymentStatus;
+use App\Enums\LoanTenureType;
+use App\Enums\RepaymentScheduleStatus;
 use App\Models\Loan;
 use App\Models\RepaymentSchedule;
 use Error;
@@ -10,16 +13,17 @@ use Illuminate\Support\Facades\DB;
 
 class LoanService
 {
+
     public function createLoan($loan_input)
     {
         $loan_input = json_decode($loan_input);
         $loan = Loan::create([
             'customer_id' => '0316453b-58ff-44fd-8c71-9d54343575c6',
             'tenure' => $loan_input->term,
-            'tenure_type' => 'WEEKLY',
+            'tenure_type' => LoanTenureType::WEEKLY->value,
             'currency' => $loan_input->currency,
             'amount' => $loan_input->amount,
-            'status' => 'PENDING',
+            'status' => LoanPaymentStatus::PENDING->value,
         ]);
 
         $loan->refresh();
@@ -41,7 +45,7 @@ class LoanService
         try {
             $loan = $this->getLoanByReferenceNumber($loan_number);
 
-            if ($loan->status == 'APPROVED') {
+            if ($loan->status === LoanPaymentStatus::APPROVED->value) {
                 throw new Error('Loan ' . $loan_number . ' is already approved');
             }
 
@@ -85,18 +89,15 @@ class LoanService
 
     public function processRepayment($repayment_details)
     {
-        //loan_number
-        //amount
-        //currency
         $repayment_details = json_decode($repayment_details);
         try {
             $loan_details = $this->getLoanByReferenceNumber($repayment_details->loan_number);
 
-            if ($loan_details->status == 'PAID') {
+            if ($loan_details->status === LoanPaymentStatus::PAID->value) {
                 throw new Error('Loan ' . $repayment_details->loan_number . ' is already paid');
             }
 
-            if ($loan_details->status !== 'APPROVED') {
+            if ($loan_details->status !== LoanPaymentStatus::APPROVED->value) {
                 throw new Error('You cannot pay for an unapproved loan');
             }
 
@@ -106,7 +107,7 @@ class LoanService
                 throw new Error('No payments pending');
             }
 
-            $this->accountRepayment($loan_details, $repayment_details, $pending_payments);
+            $this->accountLoanRepayment($loan_details, $repayment_details, $pending_payments);
 
             return 'Payment accounted successfully';
         } catch (Exception $e) {
@@ -116,7 +117,7 @@ class LoanService
 
     private function updateLoanAsApproved(Loan $loan)
     {
-        $loan->status = 'APPROVED';
+        $loan->status = LoanPaymentStatus::APPROVED->value;
         $loan->approved_by = '6b6205bd-60ed-49e8-be36-9cbc61b24ea7';
         $loan->save();
         $loan->refresh();
@@ -148,7 +149,7 @@ class LoanService
             'loan_id' => $loan_id,
             'amount' => $installment,
             'due_date' => $due_date,
-            'status' => 'PENDING',
+            'status' => RepaymentScheduleStatus::PENDING->value,
         ]);
 
         $repayment_schedule->refresh();
@@ -158,13 +159,16 @@ class LoanService
 
     private function getLoanByReferenceNumber($loan_number)
     {
-        return Loan::where('loan_reference_number', $loan_number)->firstOrFail();
+        return Loan::where('loan_reference_number', $loan_number)
+            ->whereNull('loan.deleted_at')
+            ->firstOrFail();
     }
 
     private function findPendingPayments($loan_id)
     {
         return RepaymentSchedule::where('repayment_schedule.loan_id', $loan_id)
-            ->where('repayment_schedule.status', 'PENDING')
+            ->where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
+            ->whereNull('repayment_schedule.deleted_at')
             ->orderBy('repayment_schedule.due_date', 'asc')
             ->get();
     }
@@ -172,12 +176,13 @@ class LoanService
     private function findPaidPayments($loan_id)
     {
         return RepaymentSchedule::where('repayment_schedule.loan_id', $loan_id)
-            ->where('repayment_schedule.status', 'PAID')
+            ->where('repayment_schedule.status', RepaymentScheduleStatus::PAID->value)
+            ->whereNull('repayment_schedule.deleted_at')
             ->orderBy('repayment_schedule.due_date', 'asc')
             ->get();
     }
 
-    private function accountRepayment($loan_details, $repayment_details, $pending_payments)
+    private function accountLoanRepayment($loan_details, $repayment_details, $pending_payments)
     {
         try {
             DB::beginTransaction();
@@ -196,16 +201,14 @@ class LoanService
             if ($remitting_amount < $due_payment_details->amount) {
                 throw new Error('Insufficient amount. Due amount is ' . $loan_details->currency . ' ' . $due_payment_details->amount);
             } elseif ($remitting_amount == $due_payment_details->amount) {
-                $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms);
+                $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms, $remitting_amount);
             } elseif ($remitting_amount > $due_payment_details->amount) {
                 if ($pending_payment_terms == 1) {
                     throw new Error('Payment exceeds the due amount. Due amount is ' . $loan_details->currency . ' ' . $due_payment_details->amount);
                 }
 
-                $excess_amount = $remitting_amount - $due_payment_details->amount;
-
-                $this->recalculatePaymentSchedule($loan_details, $remitting_amount, $pending_payment_terms, $due_payment_details->id);
-                $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms);
+                $this->revisitPaymentSchedule($loan_details, $remitting_amount, $pending_payment_terms, $due_payment_details->id);
+                $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms, $remitting_amount);
             }
 
             DB::commit();
@@ -215,7 +218,7 @@ class LoanService
         }
     }
 
-    private function recalculatePaymentSchedule($loan_details, $remitting_amount, $pending_payment_terms, $due_payment_id)
+    private function revisitPaymentSchedule($loan_details, $remitting_amount, $pending_payment_terms, $due_payment_id)
     {
         $paid_terms = $this->findPaidPayments($loan_details->id);
         $total_paid_amount = 0;
@@ -231,36 +234,68 @@ class LoanService
 
         $revised_installment = $remaining_total_principal_amount / $remaining_payment_terms;
 
-        RepaymentSchedule::where('repayment_schedule.status', 'PENDING')
-            ->where('repayment_schedule.id', '!=', $due_payment_id)
-            ->update([
-                'amount' => $revised_installment,
-            ]);
+        $this->revisePendingPaymentSchedules($loan_details->id, $due_payment_id, $revised_installment);
     }
 
-    private function updatePaymentScheduleAsPaid($loan_id, $repayment_schedule_id, $pending_payment_terms)
+    private function updatePaymentScheduleAsPaid($loan_id, $repayment_schedule_id, $pending_payment_terms, $remitting_amount)
     {
         try {
             DB::beginTransaction();
-            $update_payment_schedule = RepaymentSchedule::where('repayment_schedule.id', $repayment_schedule_id)
+            $updated_payment_schedule = RepaymentSchedule::where('repayment_schedule.id', $repayment_schedule_id)
+            ->whereNull('repayment_schedule.deleted_at')
             ->update([
-                'status' => 'PAID',
+                'amount' => $remitting_amount,
+                'status' => RepaymentScheduleStatus::PAID->value,
             ]);
 
-            if ($pending_payment_terms == 1) {
-                Loan::where('loan.id', $loan_id)
-                    ->update([
-                        'status' => 'PAID',
-                    ]);
+            if ($pending_payment_terms === 1) {
+                $this->updateLoanAsPaid($loan_id);
             }
 
             DB::commit();
 
-            return $update_payment_schedule;
+            return $updated_payment_schedule;
         } catch (Exception $e) {
 
             DB::rollBack();
-            throw new Error('Failed to update payment status, Please try again later, Error : ' . $e);
+            throw new Error('Failed to update payment status, Please try again later');
         }
+    }
+
+    private function revisePendingPaymentSchedules($loan_id, $current_due_schedule_id, $revised_installment){
+        try {
+            DB::beginTransaction();
+            
+            if($revised_installment == 0){
+                RepaymentSchedule::where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
+                    ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
+                    ->update([
+                        'status' => RepaymentScheduleStatus::WAIVED->value,
+                        'deleted_at' => now(),
+                    ]);
+                $this->updateLoanAsPaid($loan_id);
+            } else {
+                RepaymentSchedule::where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
+                ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
+                ->whereNull('repayment_schedule.deleted_at')
+                ->update([
+                    'amount' => $revised_installment,
+                ]);
+            }
+
+            DB::commit();
+
+        } catch(Exception $e){
+            DB::rollBack();
+            throw new Error('Error in updating payment schedules. Please try again later');
+        }
+    }
+
+    private function updateLoanAsPaid($loan_id){
+        return Loan::where('loan.id', $loan_id)
+        ->whereNull('loan.deleted_at')
+        ->update([
+            'status' => LoanPaymentStatus::PAID->value,
+        ]);
     }
 }
