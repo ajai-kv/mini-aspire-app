@@ -5,8 +5,10 @@ namespace App\Http\Services;
 use App\Enums\LoanPaymentStatus;
 use App\Enums\LoanTenureType;
 use App\Enums\RepaymentScheduleStatus;
+use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\RepaymentSchedule;
+use App\Models\User;
 use Error;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +16,17 @@ use Illuminate\Support\Facades\DB;
 class LoanService
 {
 
-    public function createLoan($loan_input)
+    public function createLoan($loan_input, User $user)
     {
+        $customer = $this->findCustomerByUserId($user->id);
+
+        if (!$customer) {
+            throw new Error('Customer infomation missing');
+        }
+
         $loan_input = json_decode($loan_input);
         $loan = Loan::create([
-            'customer_id' => '0316453b-58ff-44fd-8c71-9d54343575c6',
+            'customer_id' => $customer->id,
             'tenure' => $loan_input->term,
             'tenure_type' => LoanTenureType::WEEKLY->value,
             'currency' => $loan_input->currency,
@@ -37,10 +45,12 @@ class LoanService
             'status' => $loan->status,
         ];
 
-        return $data;
+        return ([
+            'loan' => $data
+        ]);
     }
 
-    public function approveLoan(string $loan_number)
+    public function approveLoan(string $loan_number, User $user)
     {
         try {
             $loan = $this->getLoanByReferenceNumber($loan_number);
@@ -51,7 +61,7 @@ class LoanService
 
             DB::beginTransaction();
 
-            $updatedLoan = $this->updateLoanAsApproved($loan);
+            $updatedLoan = $this->updateLoanAsApproved($loan, $user);
             $this->calculateRepaymentSchedules($updatedLoan);
 
             DB::commit();
@@ -59,6 +69,30 @@ class LoanService
             return 'Approved successfully';
         } catch (Exception $e) {
             DB::rollBack();
+            throw $e;
+        }
+    }
+
+    public function rejectLoan(string $loan_number, string $reject_reason, User $user)
+    {
+        try {
+            $loan = Loan::where('loan_reference_number', $loan_number)
+                ->where('loan.status', LoanPaymentStatus::PENDING->value)
+                ->whereNull('loan.deleted_at')
+                ->first();
+
+            if (!$loan) {
+                throw new Error('No pending loan found to reject');
+            }
+
+            $loan->status = LoanPaymentStatus::REJECTED->value;
+            $loan->rejected_by = $user->id;
+            $loan->reject_reason = $reject_reason;
+            $loan->save();
+            $loan->refresh();
+
+            return 'Rejected successfully';
+        } catch (Exception $e) {
             throw $e;
         }
     }
@@ -81,7 +115,34 @@ class LoanService
                 ->orderBy('loan.updated_at', 'desc')
                 ->get(['loan.*']);
 
-            return $loan_details;
+            return ([
+                'loans' => $loan_details
+            ]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getLoansByAdmin($status)
+    {
+        try {
+
+            $loan_details = Loan::query();
+
+            if ($status !== null) {
+                $loan_details->where('loan.status', $status);
+            }
+
+            $loan_details->whereNull('loan.deleted_at');
+
+            $loan_details->orderBy('loan.updated_at', 'desc');
+
+            $loan_details->get();
+
+            return ([
+                'loans' => $loan_details
+            ]);
+
         } catch (Exception $e) {
             throw $e;
         }
@@ -115,10 +176,10 @@ class LoanService
         }
     }
 
-    private function updateLoanAsApproved(Loan $loan)
+    private function updateLoanAsApproved(Loan $loan, User $user)
     {
         $loan->status = LoanPaymentStatus::APPROVED->value;
-        $loan->approved_by = '6b6205bd-60ed-49e8-be36-9cbc61b24ea7';
+        $loan->approved_by = $user->id;
         $loan->save();
         $loan->refresh();
 
@@ -242,11 +303,11 @@ class LoanService
         try {
             DB::beginTransaction();
             $updated_payment_schedule = RepaymentSchedule::where('repayment_schedule.id', $repayment_schedule_id)
-            ->whereNull('repayment_schedule.deleted_at')
-            ->update([
-                'amount' => $remitting_amount,
-                'status' => RepaymentScheduleStatus::PAID->value,
-            ]);
+                ->whereNull('repayment_schedule.deleted_at')
+                ->update([
+                    'amount' => $remitting_amount,
+                    'status' => RepaymentScheduleStatus::PAID->value,
+                ]);
 
             if ($pending_payment_terms === 1) {
                 $this->updateLoanAsPaid($loan_id);
@@ -262,11 +323,12 @@ class LoanService
         }
     }
 
-    private function revisePendingPaymentSchedules($loan_id, $current_due_schedule_id, $revised_installment){
+    private function revisePendingPaymentSchedules($loan_id, $current_due_schedule_id, $revised_installment)
+    {
         try {
             DB::beginTransaction();
-            
-            if($revised_installment == 0){
+
+            if ($revised_installment == 0) {
                 RepaymentSchedule::where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
                     ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
                     ->update([
@@ -276,26 +338,33 @@ class LoanService
                 $this->updateLoanAsPaid($loan_id);
             } else {
                 RepaymentSchedule::where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
-                ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
-                ->whereNull('repayment_schedule.deleted_at')
-                ->update([
-                    'amount' => $revised_installment,
-                ]);
+                    ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
+                    ->whereNull('repayment_schedule.deleted_at')
+                    ->update([
+                        'amount' => $revised_installment,
+                    ]);
             }
 
             DB::commit();
-
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             throw new Error('Error in updating payment schedules. Please try again later');
         }
     }
 
-    private function updateLoanAsPaid($loan_id){
+    private function updateLoanAsPaid($loan_id)
+    {
         return Loan::where('loan.id', $loan_id)
-        ->whereNull('loan.deleted_at')
-        ->update([
-            'status' => LoanPaymentStatus::PAID->value,
-        ]);
+            ->whereNull('loan.deleted_at')
+            ->update([
+                'status' => LoanPaymentStatus::PAID->value,
+            ]);
+    }
+
+    private function findCustomerByUserId($user_id)
+    {
+        return Customer::where('customer.user_id', $user_id)
+            ->whereNull('customer.deleted_at')
+            ->first();
     }
 }
