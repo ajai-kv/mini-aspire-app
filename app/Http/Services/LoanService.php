@@ -126,23 +126,15 @@ class LoanService
     public function getLoansByAdmin($status)
     {
         try {
-
-            $loan_details = Loan::query();
-
-            if ($status !== null) {
-                $loan_details->where('loan.status', $status);
-            }
-
-            $loan_details->whereNull('loan.deleted_at');
-
-            $loan_details->orderBy('loan.updated_at', 'desc');
-
-            $loan_details->get();
+            $loan_details = Loan::when($status, function ($query) use ($status) {
+                    return $query->where('status', $status);
+                })
+                ->whereNull('deleted_at')
+                ->orderBy('updated_at', 'desc')->get();
 
             return ([
                 'loans' => $loan_details
             ]);
-
         } catch (Exception $e) {
             throw $e;
         }
