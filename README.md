@@ -7,32 +7,32 @@ There are mainly two kind of actors in the application
 - Admin
 - Customer
 
-- Customers can be onboarded into the application by registering thrugh the API (auth/register/customer)
-- Admin can be onboarded into the application by registering through the API (auth/register/admin)
-- Login from both Admin and Customer using the API (auth/login) is needed to use the further features of the application
-
 This application provides the following features,
 
-For a customer,
+A customer can,
 
-- Can create new loan applications which will be subject to approval
-- Can view their existing loan applications
-- Can view each loan application in detail
-- Can view the repayment schedules related to a loan
-- Can repay their loan with an amount greater than or equal to the due amount
+- Create new loan applications
+- View existing loan applications
+- View each loan application in detail
+- View the repayment schedules related to a loan
+- Repay their loan with an amount greater than or equal to the due amount
 
-For Admin,
+Admin will be able to,
 
-- Can approve / reject a pending loan application
-- Can view the different loan applications in the system
-- Can view each loan application in detail
+- Approve / Reject a pending loan application
+- View the different loan applications in the system
+- View each loan application in detail
+- View repayment details of a loan
 
+# Technology Stack
 
-This application requires PHP 8.0.2 (or higher) and Laravel 9.19 (or higher)
+Technology        Type            Version
+-------------   | ------------- | ------------- 
+PHP             | Language      | 8.0.2 
+Laravel         | Framework     | 9.19       
+PostgreSQL      | Database      | 15.0  
+Sanctum         | Auth          | 3.0  
 
-PostgreSQL is used to represent the database
-
-Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authentication
 
 
 ## Steps to spin up the application

@@ -54,7 +54,9 @@ class LoanService
     public function approveLoan(string $loan_number, User $user)
     {
         try {
-            $loan = $this->getLoanByReferenceNumber($loan_number);
+            $loan = Loan::where('loan_reference_number', $loan_number)
+                ->whereNull('loan.deleted_at')
+                ->firstOrFail();
 
             if ($loan->status === LoanPaymentStatus::APPROVED->value) {
                 throw new Error('Loan ' . $loan_number . ' is already approved');
@@ -141,11 +143,15 @@ class LoanService
         }
     }
 
-    public function processRepayment($repayment_details)
+    public function processRepayment($repayment_details, $user)
     {
         $repayment_details = json_decode($repayment_details);
         try {
-            $loan_details = $this->getLoanByReferenceNumber($repayment_details->loan_number);
+            $loan_details = $this->getLoanByReferenceNumber($repayment_details->loan_number, $user->id);
+
+            if (!$loan_details) {
+                throw new Error('Error in processing payment. Loan details not found');
+            }
 
             if ($loan_details->status === LoanPaymentStatus::PAID->value) {
                 throw new Error('Loan ' . $repayment_details->loan_number . ' is already paid');
@@ -205,6 +211,46 @@ class LoanService
         ]);
     }
 
+    public function viewRepaymentSchedulesOfALoan($loan_number, $logged_user)
+    {
+
+        $loan = Loan::join('customer', 'loan.customer_id', '=', 'customer.id')
+            ->join('user', 'user.id', '=', 'customer.user_id')
+            ->select([
+                'loan.id as id',
+                'loan.loan_reference_number as loan_number',
+                'loan.tenure as tenure',
+                'loan.tenure_type as tenure_type',
+                'loan.currency as currency',
+                'loan.amount as amount',
+                'loan.status as status',
+                'loan.created_at as created_at',
+                'loan.updated_at as updated_at',
+            ])
+            ->when($logged_user, function ($query) use ($logged_user) {
+                if ($logged_user->type === UserType::CUSTOMER->value) {
+                    return $query->where('customer.user_id', $logged_user->id);
+                }
+            })
+            ->where('loan.loan_reference_number', $loan_number)
+            ->whereNull('loan.deleted_at')
+            ->first();
+
+        if (!$loan || $loan->status === 'PENDING' || $loan->status === 'REJECTED') {
+            throw new Error('Loan not found');
+        }
+
+        $repayment_schedules = RepaymentSchedule::where('loan_id', $loan->id)
+            ->whereNull('deleted_at')
+            ->orderBy('due_date', 'asc')
+            ->get();
+
+        return ([
+            'loan' => $loan,
+            'repayment_schedules' => $repayment_schedules
+        ]);
+    }
+
     private function updateLoanAsApproved(Loan $loan, User $user)
     {
         $loan->status = LoanPaymentStatus::APPROVED->value;
@@ -247,11 +293,26 @@ class LoanService
         return $repayment_schedule;
     }
 
-    private function getLoanByReferenceNumber($loan_number)
+    private function getLoanByReferenceNumber($loan_number, $user_id)
     {
-        return Loan::where('loan_reference_number', $loan_number)
+        return Loan::join('customer', 'loan.customer_id', '=', 'customer.id')
+            ->join('user', 'customer.user_id', '=', 'user.id')
+            ->select([
+                'loan.id as id',
+                'loan.loan_reference_number as loan_number',
+                'loan.tenure as tenure',
+                'loan.tenure_type as tenure_type',
+                'loan.currency as currency',
+                'loan.amount as amount',
+                'loan.status as status',
+                'loan.created_at as created_at',
+                'loan.updated_at as updated_at',
+            ])
+            ->where('user.id', $user_id)
+            ->where('loan.loan_reference_number', $loan_number)
             ->whereNull('loan.deleted_at')
-            ->firstOrFail();
+            ->whereNull('customer.deleted_at')
+            ->first();
     }
 
     private function findPendingPayments($loan_id)
