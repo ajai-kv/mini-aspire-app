@@ -67,49 +67,56 @@ Admin will be able to,
     git clone https://github.com/ajai-kv/mini-aspire-app.git
 
 
-### 2. Unpack and Install dependencies
+### 2. Generate .env and .env.testing file
+
+    cp .env.example .env
+    cp .env.example .env.testing
+
+- Use this command or simply create a .env and .env.testing file by duplicating .env.example
+
+### 3. Unpack and Install dependencies
 
     php composer.phar install
 
 - This will unpack and install all the dependencies mentioned in the composer.json file
 
-### 3. Run the database migrations
+### 4. Run the database migrations
 
     php artisan migrate
 
 - This will run the database migrations
 
-### 4. Generate a seeded admin user for the user table
+### 5. Generate a seeded admin user for the user table
 
     php artisan db:seed
 
 - This will run the database migrations
 
-### 5. Rollback the migrations (optional)
+### 6. Rollback the migrations (optional)
 
     php artisan migrate:rollback
 
 - This command can be used to rollback the migrations if needed
 
-### 6. Spin up the docker via Laravel Sail
+### 7. Spin up the docker via Laravel Sail
 
     ./vendor/bin/sail up
 
 - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
 - This command will spin up the docker containers based on the configuration in docker-compose.yml
 
-### 7. Start the Artisan server
+### 8. Start the Artisan server
 
     php artisan serve
 
 - To start the Artisan server, use the following command
 - The server will be up and listening to http://localhost:8000
 
-### 8. Import the postman collection
+### 9. Import the postman collection
 
 - Import the postman collection shared to start playing around with the APIs
 
-### 9. Run test cases
+### 10. Run test cases
 
     .vendor/bin/phpunit
 
