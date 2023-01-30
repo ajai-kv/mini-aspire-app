@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Policies\LoanPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('create-loan', [LoanPolicy::class, 'createLoan']);
+        Gate::define('view-loan-customer', [LoanPolicy::class, 'viewLoanCustomer']);
+        Gate::define('view-loan-admin', [LoanPolicy::class, 'viewLoanAdmin']);
+        Gate::define('view-loan-by-id', [LoanPolicy::class, 'viewLoanById']);
+        Gate::define('approve-loan', [LoanPolicy::class, 'changeLoanStatus']);
+        Gate::define('reject-loan', [LoanPolicy::class, 'changeLoanStatus']);
+        Gate::define('repay-loan-customer', [LoanPolicy::class, 'repayLoanCustomer']);
     }
 }
+

@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\LoanController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LoanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware('auth:sanctum')->post('/auth/register/admin', [AuthController::class, 'createAdminUser']);
+Route::post('/auth/register/customer', [AuthController::class, 'createCustomerUser']);
+Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
-Route::get('/loan', [LoanController::class, 'getLoansByCustomer']);
-Route::post('/loan', [LoanController::class, 'createLoanApplication']);
-Route::put('/loan/{loan_number}/approve', [LoanController::class, 'approveLoanApplication']);
-Route::put('/loan/{loan_number}/pay', [LoanController::class, 'receivePaymentOnLoan']);
+Route::middleware('auth:sanctum')->get('/loan', [LoanController::class, 'getLoansByCustomer']);
+Route::middleware('auth:sanctum')->get('/loan/admin', [LoanController::class, 'getLoansByAdmin']);
+Route::middleware('auth:sanctum')->get('/loan/{id}', [LoanController::class, 'getLoanById']);
+Route::middleware('auth:sanctum')->post('/loan', [LoanController::class, 'createLoanApplication']);
+Route::middleware('auth:sanctum')->put('/loan/{loan_number}/approve', [LoanController::class, 'approveLoanApplication']);
+Route::middleware('auth:sanctum')->put('/loan/{loan_number}/reject', [LoanController::class, 'rejectLoanApplication']);
+Route::middleware('auth:sanctum')->put('/loan/{loan_number}/pay', [LoanController::class, 'receivePaymentOnLoan']);
