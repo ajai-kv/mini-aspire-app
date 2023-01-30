@@ -196,17 +196,46 @@ class LoanController extends Controller
         }
 
         try {
+            $logged_user = auth()->user();
+
             $payment_input = json_encode([
                 'loan_number' => $loan_number,
                 'currency' => $request->input('currency'),
                 'amount' => $request->input('amount'),
             ]);
 
-            $processed_payment = $this->loanService->processRepayment($payment_input);
+            $processed_payment = $this->loanService->processRepayment($payment_input, $logged_user);
 
             return response()->json([
                 'status' => true,
                 'message' => $processed_payment
+            ], 200);
+        } catch (\Throwable $t) {
+            return response()->json([
+                'status' => false,
+                'message' => $t->getMessage()
+            ], 500);
+        }
+    }
+
+    public function viewRepaymentSchedule(Request $request, string $loan_number)
+    {
+
+        if (!Gate::allows('view-repayment-schedule')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Permission denied'
+            ], 403);
+        }
+
+        try {
+            $logged_user = auth()->user();
+
+            $repayment_schedule = $this->loanService->viewRepaymentSchedulesOfALoan($loan_number, $logged_user);
+
+            return response()->json([
+                'status' => true,
+                'message' => $repayment_schedule
             ], 200);
         } catch (\Throwable $t) {
             return response()->json([
