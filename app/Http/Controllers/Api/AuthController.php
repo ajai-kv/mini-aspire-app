@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\UserType;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Services\AuthService;
@@ -12,9 +11,9 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     /**
-     * Create User
+     * Create Admin User
      * @param Request $request
-     * @return User 
+     * @return token
      */
     private $authService;
 
@@ -66,6 +65,11 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Create Customer User
+     * @param Request $request
+     * @return token
+     */
     public function createCustomerUser(Request $request)
     {
         try {
@@ -122,7 +126,7 @@ class AuthController extends Controller
     /**
      * Login The User
      * @param Request $request
-     * @return User
+     * @return token
      */
     public function loginUser(Request $request)
     {

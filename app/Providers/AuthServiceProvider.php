@@ -33,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('approve-loan', [LoanPolicy::class, 'changeLoanStatus']);
         Gate::define('reject-loan', [LoanPolicy::class, 'changeLoanStatus']);
         Gate::define('repay-loan-customer', [LoanPolicy::class, 'repayLoanCustomer']);
+        Gate::define('view-repayment-schedule', [LoanPolicy::class, 'viewRepaymentSchedule']);
     }
 }
 

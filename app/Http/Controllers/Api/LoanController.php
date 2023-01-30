@@ -21,9 +21,20 @@ class LoanController extends Controller
         $this->loanService = new LoanService();
     }
 
+
+    /**
+     * Create a loan application in pending state
+     * @param Request $request
+     * @return Loan
+     */
     public function createLoanApplication(Request $request)
     {
 
+
+        /* Authorization gate checks whether the authenticated 
+           user passes the authorization policy
+           We have API level policies defined for each API 
+        */
         if (!Gate::allows('create-loan')) {
             return response()->json([
                 'status' => false,
@@ -54,6 +65,11 @@ class LoanController extends Controller
         }
     }
 
+
+    /**
+     * Approve a pending loan application
+     * @param Request $request
+     */
     public function approveLoanApplication(Request $request, string $loan_number)
     {
         if (!Gate::allows('approve-loan')) {
@@ -80,6 +96,10 @@ class LoanController extends Controller
         }
     }
 
+    /**
+     * Reject a pending loan application
+     * @param Request $request
+     */
     public function rejectLoanApplication(Request $request, string $loan_number)
     {
         if (!Gate::allows('reject-loan')) {
@@ -106,6 +126,11 @@ class LoanController extends Controller
         }
     }
 
+    /**
+     * View loans related to logged in customer
+     * @param Request $request
+     * @return Loan[]
+     */
     public function getLoansByCustomer()
     {
         if (!Gate::allows('view-loan-customer')) {
@@ -132,6 +157,11 @@ class LoanController extends Controller
         }
     }
 
+    /**
+     * View all loans by admin
+     * @param Request $request
+     * @return Loan[]
+     */
     public function getLoansByAdmin(Request $request)
     {
         if (!Gate::allows('view-loan-admin')) {
@@ -158,7 +188,11 @@ class LoanController extends Controller
         }
     }
 
-
+    /**
+     * Get loan by its id
+     * @param Request $request
+     * @return Loan
+     */
     public function getLoanById($loan_id)
     {
         if (!Gate::allows('view-loan-by-id')) {
@@ -185,6 +219,10 @@ class LoanController extends Controller
         }
     }
 
+    /**
+     * Receive and update payment done on a loan by customer
+     * @param Request $request
+     */
     public function receivePaymentOnLoan(Request $request, string $loan_number)
     {
 
@@ -196,17 +234,51 @@ class LoanController extends Controller
         }
 
         try {
+            $logged_user = auth()->user();
+
             $payment_input = json_encode([
                 'loan_number' => $loan_number,
                 'currency' => $request->input('currency'),
                 'amount' => $request->input('amount'),
             ]);
 
-            $processed_payment = $this->loanService->processRepayment($payment_input);
+            $processed_payment = $this->loanService->processRepayment($payment_input, $logged_user);
 
             return response()->json([
                 'status' => true,
                 'message' => $processed_payment
+            ], 200);
+        } catch (\Throwable $t) {
+            return response()->json([
+                'status' => false,
+                'message' => $t->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * View the repayment schedule of a loan
+     * @param Request $request
+     * @return Loan, Repayment Schedule
+     */
+    public function viewRepaymentSchedule(Request $request, string $loan_number)
+    {
+
+        if (!Gate::allows('view-repayment-schedule')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Permission denied'
+            ], 403);
+        }
+
+        try {
+            $logged_user = auth()->user();
+
+            $repayment_schedule = $this->loanService->viewRepaymentSchedulesOfALoan($loan_number, $logged_user);
+
+            return response()->json([
+                'status' => true,
+                'message' => $repayment_schedule
             ], 200);
         } catch (\Throwable $t) {
             return response()->json([
