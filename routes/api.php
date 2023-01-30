@@ -15,11 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Auth Routes
 Route::middleware('auth:sanctum')->post('/auth/register/admin', [AuthController::class, 'createAdminUser']);
-
 Route::post('/auth/register/customer', [AuthController::class, 'createCustomerUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
+
+
+// Loan Routes
 Route::middleware('auth:sanctum')->get('/loan', [LoanController::class, 'getLoansByCustomer']);
 Route::middleware('auth:sanctum')->get('/loan/admin', [LoanController::class, 'getLoansByAdmin']);
 Route::middleware('auth:sanctum')->get('/loan/{id}', [LoanController::class, 'getLoanById']);
