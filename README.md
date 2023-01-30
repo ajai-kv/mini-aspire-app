@@ -29,36 +29,34 @@ Admin will be able to,
 <table>
     <thead>
       <tr>
-        <th>words</th>
-        <th>transform to</th>
-        <th>keepUpperCase is false</th>
-        <th>keepUpperCase is true</th>
+        <th>Technology</th>
+        <th>Type</th>
+        <th>Version</th>
       </tr>
     </thead>
     <tbody>
         <tr>
-            <td>"XML HTTP request"</td>
-            <td>pascalCase</td>
-            <td><code>XmlHttpRequest</code></td>
-            <td><code>XMLHTTPRequest</code></td>
+            <td>PHP</td>
+            <td>Language</td>
+            <td><code>8.0.2</code></td>
         </tr>
         <tr>
-            <td>"new customer ID"</td>
-            <td>camelCase</td>
-            <td><code>newCustomerId</code></td>
-            <td><code>newCustomerID</code></td>
+            <td>Laravel</td>
+            <td>Framework</td>
+            <td><code>9.19</code></td>
+        </tr>
+        <tr>
+            <td>PostgreSQL</td>
+            <td>Database</td>
+            <td><code>15.0</code></td>
+        </tr>
+        <tr>
+            <td>Sanctum</td>
+            <td>Auth</td>
+            <td><code>3.0</code></td>
         </tr>
     </tbody>
   </table>
-
-|Technology        Type            Version       |
-|:-------------   |:-------------:|-------------:| 
-|PHP              | Language      |8.0.2         | 
-|Laravel          | Framework     |9.19          |       
-|PostgreSQL       | Database      |15.0          |  
-|Sanctum          | Auth          |3.0           |  
-
-
 
 ## Steps to spin up the application
 
