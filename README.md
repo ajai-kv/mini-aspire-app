@@ -24,7 +24,7 @@ Admin will be able to,
 - View each loan application in detail
 - View repayment details of a loan
 
-# Technology Stack
+## Technology Stack
 
 <table>
     <thead>
