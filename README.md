@@ -94,6 +94,7 @@ Admin will be able to,
     php artisan db:seed
 
 - This will run the database migrations
+- This seeded admin user can be used to login and generate token at first
 
 ### 6. Rollback the migrations (optional)
 
