@@ -45,26 +45,24 @@ Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authenticatio
 
 ### 2. Spin up the docker via Laravel Sail
 
-    - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
-
     ./vendor/bin/sail up
 
-    - This command will spin up the docker containers based on the configuration in docker-compose.yml
+- Laravel Sail is a simple command line interface which can be used to manage the docker service. 
+- This command will spin up the docker containers based on the configuration in docker-compose.yml
 
 ### 3. Start the Artisan server
 
-    - To start the Artisan server, use the following command
-
     php artisan serve
 
-    - The server will be up and listening to http://localhost:8000
+- To start the Artisan server, use the following command
+- The server will be up and listening to http://localhost:8000
 
 ### 4. Import the postman collection
 
-    - Import the postman collection shared to start playing around with the APIs
+- Import the postman collection shared to start playing around with the APIs
 
 ### 4. For running test cases
 
     .vendor/bin/phpunit
 
-    - This command will let the test cases to be executed
+- This command will let the test cases to be executed
