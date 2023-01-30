@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
+    laravel:
         build:
             context: ./vendor/laravel/sail/runtimes/8.2
             dockerfile: Dockerfile
@@ -24,7 +24,6 @@ services:
             - sail
         depends_on:
             - pgsql
-            - selenium
     pgsql:
         image: 'postgres:15'
         ports:
@@ -43,14 +42,6 @@ services:
             test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
             retries: 3
             timeout: 5s
-    selenium:
-        image: 'selenium/standalone-chrome'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - '/dev/shm:/dev/shm'
-        networks:
-            - sail
 networks:
     sail:
         driver: bridge

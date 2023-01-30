@@ -7,33 +7,59 @@ There are mainly two kind of actors in the application
 - Admin
 - Customer
 
-- Customers can be onboarded into the application by registering thrugh the API (auth/register/customer)
-- Admin can be onboarded into the application by registering through the API (auth/register/admin)
-- Login from both Admin and Customer using the API (auth/login) is needed to use the further features of the application
-
 This application provides the following features,
 
-For a customer,
+A customer can,
 
-- Can create new loan applications which will be subject to approval
-- Can view their existing loan applications
-- Can view each loan application in detail
-- Can view the repayment schedules related to a loan
-- Can repay their loan with an amount greater than or equal to the due amount
+- Create new loan applications
+- View existing loan applications
+- View each loan application in detail
+- View the repayment schedules related to a loan
+- Repay their loan with an amount greater than or equal to the due amount
 
-For Admin,
+Admin will be able to,
 
-- Can approve / reject a pending loan application
-- Can view the different loan applications in the system
-- Can view each loan application in detail
+- Approve / Reject a pending loan application
+- View the different loan applications in the system
+- View each loan application in detail
+- View repayment details of a loan
+
+## Technology Stack
+
+<table>
+    <thead>
+      <tr>
+        <th>Technology</th>
+        <th>Type</th>
+        <th>Version</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>PHP</td>
+            <td>Language</td>
+            <td><code>8.0.2</code></td>
+        </tr>
+        <tr>
+            <td>Laravel</td>
+            <td>Framework</td>
+            <td><code>9.19</code></td>
+        </tr>
+        <tr>
+            <td>PostgreSQL</td>
+            <td>Database</td>
+            <td><code>15.0</code></td>
+        </tr>
+        <tr>
+            <td>Sanctum</td>
+            <td>Auth</td>
+            <td><code>3.0</code></td>
+        </tr>
+    </tbody>
+  </table>
 
 
-This application requires PHP 8.0.2 (or higher) and Laravel 9.19 (or higher)
-
-PostgreSQL is used to represent the database
-
-Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authentication
-
+#### Database Schema : https://dbdiagram.io/d/63d0047e296d97641d7bce90
 
 ## Steps to spin up the application
 
@@ -44,43 +70,56 @@ Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authenticatio
     git clone https://github.com/ajai-kv/mini-aspire-app.git
 
 
-### 2. Unpack and Install dependencies
+### 2. Generate .env and .env.testing file
 
-    composer install
+    cp .env.example .env
+    cp .env.example .env.testing
+
+- Use this command or simply create a .env and .env.testing file by duplicating .env.example
+
+### 3. Unpack and Install dependencies
+
+    php composer.phar install
 
 - This will unpack and install all the dependencies mentioned in the composer.json file
 
-### 3. Run the database migrations
+### 4. Run the database migrations
 
     php artisan migrate
 
 - This will run the database migrations
 
-### 4. Rollback the migrations (optional)
+### 5. Generate a seeded admin user for the user table
+
+    php artisan db:seed
+
+- This will run the database migrations
+
+### 6. Rollback the migrations (optional)
 
     php artisan migrate:rollback
 
 - This command can be used to rollback the migrations if needed
 
-### 5. Spin up the docker via Laravel Sail
+### 7. Spin up the docker via Laravel Sail
 
     ./vendor/bin/sail up
 
 - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
 - This command will spin up the docker containers based on the configuration in docker-compose.yml
 
-### 6. Start the Artisan server
+### 8. Start the Artisan server
 
     php artisan serve
 
 - To start the Artisan server, use the following command
 - The server will be up and listening to http://localhost:8000
 
-### 7. Import the postman collection
+### 9. Import the postman collection
 
 - Import the postman collection shared to start playing around with the APIs
 
-### 8. For running test cases
+### 10. Run test cases
 
     .vendor/bin/phpunit
 

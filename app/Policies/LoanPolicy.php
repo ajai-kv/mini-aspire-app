@@ -50,4 +50,22 @@ class LoanPolicy
         }
         return true;
     }
+
+    public function repayLoanCustomer()
+    {
+        $user = auth()->user();
+        if ($user->type !== UserType::CUSTOMER->value  || !($user->is_active)) {
+            return false;
+        }
+        return true;
+    }
+
+    public function viewRepaymentSchedule()
+    {
+        $user = auth()->user();
+        if (!($user->is_active)) {
+            return false;
+        }
+        return true;
+    }
 }
