@@ -58,6 +58,9 @@ Admin will be able to,
     </tbody>
   </table>
 
+
+#### Database Schema : https://dbdiagram.io/d/63d0047e296d97641d7bce90
+
 ## Steps to spin up the application
 
 - Before proceeding please ensure that you have PHP and Composer [https://getcomposer.org] installed on your system
