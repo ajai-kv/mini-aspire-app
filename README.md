@@ -26,12 +26,12 @@ Admin will be able to,
 
 # Technology Stack
 
-|   Technology         Type            Version          |
-|   :-------------   | ------------- | -------------:   | 
-|   PHP              | Language      | 8.0.2            | 
-|   Laravel          | Framework     | 9.19             |       
-|   PostgreSQL       | Database      | 15.0             |  
-|   Sanctum          | Auth          | 3.0              |  
+|Technology        Type            Version       |
+|:-------------   |:-------------:|-------------:| 
+|PHP              | Language      |8.0.2         | 
+|Laravel          | Framework     |9.19          |       
+|PostgreSQL       | Database      |15.0          |  
+|Sanctum          | Auth          |3.0           |  
 
 
 
