@@ -15,11 +15,21 @@ use Illuminate\Validation\UnauthorizedException;
 
 class AuthService
 {
+
+    // Takes care of processing user registration request
     public function registerUser($user_details, $user_type)
     {
         try {
             $user_details = json_decode($user_details);
 
+
+            /* 
+                If the user is an ADMIN, an entry is created
+                in the user table only. If its a CUSTOMER
+                A record in user table and customer table are created transactionally.
+                From CUSTOMER user, we are expecting more details such as address, id_card
+                card_number, date_of_birth etc
+            */
             DB::beginTransaction();
 
             $user = User::create([

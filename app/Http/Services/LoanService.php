@@ -54,6 +54,8 @@ class LoanService
     public function approveLoan(string $loan_number, User $user)
     {
         try {
+
+            // Checks if the loan is present or not
             $loan = Loan::where('loan_reference_number', $loan_number)
                 ->whereNull('loan.deleted_at')
                 ->firstOrFail();
@@ -61,6 +63,12 @@ class LoanService
             if ($loan->status === LoanPaymentStatus::APPROVED->value) {
                 throw new Error('Loan ' . $loan_number . ' is already approved');
             }
+
+            /*
+                Mark the loan as approved
+                and then generate its payment schedules within
+                a single transaction
+            */
 
             DB::beginTransaction();
 
@@ -161,12 +169,20 @@ class LoanService
                 throw new Error('You cannot pay for an unapproved loan');
             }
 
+            /*
+                Find the pending payments related to 
+                the particular loan by searching 
+                the repayment_schedule table
+            */
             $pending_payments = $this->findPendingPayments($loan_details->id);
 
+
+            // If no payments pending
             if (count($pending_payments) < 1) {
                 throw new Error('No payments pending');
             }
 
+            // Start the process of accounting the amount remitted by user
             $this->accountLoanRepayment($loan_details, $repayment_details, $pending_payments);
 
             return 'Payment accounted successfully';
@@ -336,30 +352,64 @@ class LoanService
     private function accountLoanRepayment($loan_details, $repayment_details, $pending_payments)
     {
         try {
+
             DB::beginTransaction();
 
             $pending_payment_terms = count($pending_payments);
             $remitting_amount = $repayment_details->amount;
 
+            // If the remitting amount is higher than the total amount taken as loan
             if ($remitting_amount > $loan_details->amount) {
                 throw new Error('The amount trying to remit is higher than the loaned principal amount');
             }
 
             $due_payment_details = $pending_payments->first();
 
-            // TODO: Update payment history as well
+            /* 
+                TODO: A loan statement table can be introduced here
+                which can make a record of the different CREDIT/DEBIT
+                transactions that is taking place as related to this loan entity.
 
+                But since currently this is just a representation of things and 
+                there is only one simple way of single dispersal, it is not necessary. 
+                But in real world systems it is very highly recommended
+            
+            */
+
+
+            //If the remitting amount is lower than the due installment amount
             if ($remitting_amount < $due_payment_details->amount) {
+
                 throw new Error('Insufficient amount. Due amount is ' . $loan_details->currency . ' ' . $due_payment_details->amount);
+            
             } elseif ($remitting_amount == $due_payment_details->amount) {
+                
+                /*
+                    If the remitting amount is same as due amount. Simply mark
+                    the payment schedule as paid 
+                */
+
                 $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms, $remitting_amount);
+            
             } elseif ($remitting_amount > $due_payment_details->amount) {
+             
+
+                // If this is the last payable schedule and excess amount is remitted. We will not account the payment
                 if ($pending_payment_terms == 1) {
                     throw new Error('Payment exceeds the due amount. Due amount is ' . $loan_details->currency . ' ' . $due_payment_details->amount);
                 }
 
+
+                /*
+                    If the remitting amount is more than the due amount.
+                    Then we have to accept the remitting amount and do 
+                    a recalculation of the remaining loan amount and its
+                    corresponding installment amounts
+                */
+
                 $this->revisitPaymentSchedule($loan_details, $remitting_amount, $pending_payment_terms, $due_payment_details->id);
                 $this->updatePaymentScheduleAsPaid($loan_details->id, $due_payment_details->id, $pending_payment_terms, $remitting_amount);
+            
             }
 
             DB::commit();
@@ -400,6 +450,8 @@ class LoanService
                 ]);
 
             if ($pending_payment_terms === 1) {
+
+                // If its the last installment. Mark loan as PAID too.
                 $this->updateLoanAsPaid($loan_id);
             }
 
@@ -418,6 +470,11 @@ class LoanService
         try {
             DB::beginTransaction();
 
+            /*
+                After recalculation, if the future payment schedules are already covered in the
+                current payments. We can mark the future schedules as WAIVED. So that they will
+                be skipped and loan will be closed as PAID
+            */
             if ($revised_installment == 0) {
                 RepaymentSchedule::where('repayment_schedule.status', RepaymentScheduleStatus::PENDING->value)
                     ->where('repayment_schedule.id', '!=', $current_due_schedule_id)
