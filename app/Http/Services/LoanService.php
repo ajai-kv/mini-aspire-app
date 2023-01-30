@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Enums\LoanPaymentStatus;
 use App\Enums\LoanTenureType;
 use App\Enums\RepaymentScheduleStatus;
+use App\Enums\UserType;
 use App\Models\Customer;
 use App\Models\Loan;
 use App\Models\RepaymentSchedule;
@@ -127,8 +128,8 @@ class LoanService
     {
         try {
             $loan_details = Loan::when($status, function ($query) use ($status) {
-                    return $query->where('status', $status);
-                })
+                return $query->where('status', $status);
+            })
                 ->whereNull('deleted_at')
                 ->orderBy('updated_at', 'desc')->get();
 
@@ -166,6 +167,42 @@ class LoanService
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    public function getLoanById($loan_id, $logged_user)
+    {
+        $loan_details = Loan::join('customer', 'loan.customer_id', '=', 'customer.id')
+            ->join('user', 'user.id', '=', 'customer.user_id')
+            ->select([
+                'customer.id as customer_id',
+                'user.full_name as full_name',
+                'user.email as email',
+                'user.phone_number as phone_number',
+                'user.profile_picture as profile_picture',
+                'customer.address as address',
+                'loan.loan_reference_number as loan_number',
+                'loan.tenure as tenure',
+                'loan.tenure_type as tenure_type',
+                'loan.currency as currency',
+                'loan.amount as amount',
+                'loan.status as status',
+                'loan.created_at as created_at',
+                'loan.updated_at as updated_at',
+            ])
+            ->where('loan.id', $loan_id)
+            ->when($logged_user, function ($query) use ($logged_user) {
+                if ($logged_user->type === UserType::CUSTOMER->value) {
+                    return $query->where('customer.user_id', $logged_user->id);
+                }
+            })
+            ->whereNull('loan.deleted_at')
+            ->whereNull('customer.deleted_at')
+            ->orderBy('loan.updated_at', 'desc')
+            ->get();
+
+        return ([
+            'loan' => $loan_details
+        ]);
     }
 
     private function updateLoanAsApproved(Loan $loan, User $user)

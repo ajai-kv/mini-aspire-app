@@ -41,4 +41,13 @@ class LoanPolicy
         }
         return true;
     }
+
+    public function viewLoanById()
+    {
+        $user = auth()->user();
+        if (!($user->is_active)) {
+            return false;
+        }
+        return true;
+    }
 }

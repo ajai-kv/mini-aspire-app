@@ -21,6 +21,7 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::middleware('auth:sanctum')->get('/loan', [LoanController::class, 'getLoansByCustomer']);
 Route::middleware('auth:sanctum')->get('/loan/admin', [LoanController::class, 'getLoansByAdmin']);
+Route::middleware('auth:sanctum')->get('/loan/{id}', [LoanController::class, 'getLoanById']);
 Route::middleware('auth:sanctum')->post('/loan', [LoanController::class, 'createLoanApplication']);
 Route::middleware('auth:sanctum')->put('/loan/{loan_number}/approve', [LoanController::class, 'approveLoanApplication']);
 Route::middleware('auth:sanctum')->put('/loan/{loan_number}/reject', [LoanController::class, 'rejectLoanApplication']);

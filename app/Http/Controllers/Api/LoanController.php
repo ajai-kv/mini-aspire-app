@@ -158,8 +158,43 @@ class LoanController extends Controller
         }
     }
 
+
+    public function getLoanById($loan_id)
+    {
+        if (!Gate::allows('view-loan-by-id')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Permission denied'
+            ], 403);
+        }
+
+        $logged_user = auth()->user();
+
+        try {
+            $loan = $this->loanService->getLoanById($loan_id, $logged_user);
+
+            return response()->json([
+                'status' => true,
+                'data' => $loan
+            ], 200);
+        } catch (\Throwable $t) {
+            return response()->json([
+                'status' => false,
+                'message' => $t->getMessage()
+            ], 500);
+        }
+    }
+
     public function receivePaymentOnLoan(Request $request, string $loan_number)
     {
+
+        if (!Gate::allows('repay-loan-customer')) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Permission denied'
+            ], 403);
+        }
+
         try {
             $payment_input = json_encode([
                 'loan_number' => $loan_number,
