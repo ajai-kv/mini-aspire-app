@@ -95,6 +95,7 @@ Admin will be able to,
 
 - This will run the database migrations
 - This seeded admin user can be used to login and generate token at first
+- email: admin@example.com, password: password
 
 ### 6. Rollback the migrations (optional)
 

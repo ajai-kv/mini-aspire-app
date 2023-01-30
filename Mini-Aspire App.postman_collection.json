@@ -1,0 +1,854 @@
+{
+	"info": {
+		"_postman_id": "9335b45c-51a0-4d21-b749-f78b9214b4f9",
+		"name": "Mini-Aspire App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11585268"
+	},
+	"item": [
+		{
+			"name": "Common",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/login?email=test4@example.com&password=abcddd",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "test4@example.com"
+								},
+								{
+									"key": "password",
+									"value": "abcddd"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Repayment Schedule of a Loan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "9|9WVslpXRK9AzKG5AkvajBTXRTHIWiw7VCJKaNwuO",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/schedules/24",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"schedules",
+								"24"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "View Repayment Schedule of a Loan",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/loan/schedules/16",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"loan",
+										"schedules",
+										"16"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jan 2023 14:40:49 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jan 2023 14:40:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": {\n        \"loan\": {\n            \"id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n            \"loan_number\": 16,\n            \"tenure\": 6,\n            \"tenure_type\": \"WEEKLY\",\n            \"currency\": \"INR\",\n            \"amount\": 85000,\n            \"status\": \"APPROVED\",\n            \"created_at\": \"2023-01-29T19:21:18.000000Z\",\n            \"updated_at\": \"2023-01-29T19:21:41.000000Z\"\n        },\n        \"repayment_schedules\": [\n            {\n                \"id\": \"985799d0-89f8-4ccc-90e2-de8bde6ee542\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"15000.0000000000\",\n                \"due_date\": \"2023-02-05 19:21:41+00\",\n                \"status\": \"PAID\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:03.000000Z\"\n            },\n            {\n                \"id\": \"985799d0-8aa5-40ce-83d5-a0c597eddf41\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"15000.0000000000\",\n                \"due_date\": \"2023-02-12 19:21:41+00\",\n                \"status\": \"PAID\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:26.000000Z\"\n            },\n            {\n                \"id\": \"985799d0-8b05-4b8e-8895-198802c89c04\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"13750.0000000000\",\n                \"due_date\": \"2023-02-19 19:21:41+00\",\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:26.000000Z\"\n            },\n            {\n                \"id\": \"985799d0-8b5f-4fca-8ed4-c12e279afedc\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"13750.0000000000\",\n                \"due_date\": \"2023-02-26 19:21:41+00\",\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:26.000000Z\"\n            },\n            {\n                \"id\": \"985799d0-8bb8-4d08-8ba0-2eaf70ab2e07\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"13750.0000000000\",\n                \"due_date\": \"2023-03-05 19:21:41+00\",\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:26.000000Z\"\n            },\n            {\n                \"id\": \"985799d0-8c12-4b82-afc7-e902cb4f8633\",\n                \"loan_id\": \"985799ac-c4de-45d2-8352-3e22ae4d8028\",\n                \"amount\": \"13750.0000000000\",\n                \"due_date\": \"2023-03-12 19:21:41+00\",\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T19:21:41.000000Z\",\n                \"updated_at\": \"2023-01-29T19:27:26.000000Z\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "View Loan Details By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "7|GvkExFCzgRz8Zj7ABSIl8bbErcIDU2IbIkwPLDCR",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/9857bf88-9341-419a-8fb2-f308691048ba",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"9857bf88-9341-419a-8fb2-f308691048ba"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "View Loan By Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/loan/9857bf88-9341-419a-8fb2-f308691048ba",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"loan",
+										"9857bf88-9341-419a-8fb2-f308691048ba"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jan 2023 06:26:06 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 30 Jan 2023 06:26:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"data\": {\n        \"loan\": [\n            {\n                \"customer_id\": \"9857be86-50d5-4632-ac3d-82ae6de18ba5\",\n                \"full_name\": \"Test 7\",\n                \"email\": \"test7@example.com\",\n                \"phone_number\": \"9846889307\",\n                \"profile_picture\": null,\n                \"address\": \"Test 1, Test XYZ, Claifornia\",\n                \"loan_number\": 20,\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"status\": \"PENDING\",\n                \"created_at\": \"2023-01-29T21:07:09.000000Z\",\n                \"updated_at\": \"2023-01-29T21:07:09.000000Z\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "View My Loans",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "View My Loans",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/loan",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"loan"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 21:08:05 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 21:08:05 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"data\": {\n        \"loans\": [\n            {\n                \"loan_reference_number\": 20,\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"status\": \"PENDING\"\n            },\n            {\n                \"loan_reference_number\": 19,\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"status\": \"PENDING\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Loan",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "7|GvkExFCzgRz8Zj7ABSIl8bbErcIDU2IbIkwPLDCR",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"term\": \"6\",\n    \"currency\": \"INR\",\n    \"amount\": \"85000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Loan",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"term\": \"6\",\n    \"currency\": \"INR\",\n    \"amount\": \"85000\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/loan",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"loan"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 21:07:09 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 21:07:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"data\": {\n        \"loan\": {\n            \"loan_reference_number\": 20,\n            \"tenure\": 6,\n            \"tenure_type\": \"WEEKLY\",\n            \"currency\": \"INR\",\n            \"amount\": 85000,\n            \"status\": \"PENDING\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Pay Loan Installment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": \"10000\",\n    \"currency\": \"INR\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/9/pay",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"9",
+								"pay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Test 7\",\n    \"email\": \"test7@example.com\",\n    \"password\": \"abcd\",\n    \"phone_number\": 9846889307,\n    \"date_of_birth\": \"10/09/1998\",\n    \"address\": \"Test 1, Test XYZ, Claifornia\",\n    \"identification_document\": \"PASSPORT\",\n    \"document_number\": \"S110038A9\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/register/customer",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"register",
+								"customer"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register Customer",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/auth/register/customer?full_name=Test 3&email=test3@example.com&password=abcd&phone_number=9846889301",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"auth",
+										"register",
+										"customer"
+									],
+									"query": [
+										{
+											"key": "full_name",
+											"value": "Test 3"
+										},
+										{
+											"key": "email",
+											"value": "test3@example.com"
+										},
+										{
+											"key": "password",
+											"value": "abcd"
+										},
+										{
+											"key": "phone_number",
+											"value": "9846889301"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 18:38:04 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 18:38:04 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"message\": \"User Created Successfully\",\n    \"token\": \"2|4jt1UgVt7rFlp886xOlGzFgy2rXolDCBxNx9ASM2\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Approve Loan",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/4/approve",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"4",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Loan Application",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/15/reject",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"15",
+								"reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Loans Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|vxvzUEk2x2obBinGD6KsX8wAgEKgEKoVB6tJUtA3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/loan/admin?status=PENDING",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"loan",
+								"admin"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "View Loans Admin",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/loan/admin?status=PENDING",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"loan",
+										"admin"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "PENDING"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 22:07:03 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 29 Jan 2023 22:07:03 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.1"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "58"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": true,\n    \"data\": {\n        \"loans\": [\n            {\n                \"id\": \"9857bf88-9341-419a-8fb2-f308691048ba\",\n                \"loan_reference_number\": 20,\n                \"customer_id\": \"9857be86-50d5-4632-ac3d-82ae6de18ba5\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T21:07:09.000000Z\",\n                \"updated_at\": \"2023-01-29T21:07:09.000000Z\"\n            },\n            {\n                \"id\": \"9857bed7-c64a-42a2-9135-d255d5dc182a\",\n                \"loan_reference_number\": 19,\n                \"customer_id\": \"9857be86-50d5-4632-ac3d-82ae6de18ba5\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T21:05:13.000000Z\",\n                \"updated_at\": \"2023-01-29T21:05:13.000000Z\"\n            },\n            {\n                \"id\": \"9857b476-bd30-4963-a4e0-0d24f7ec4921\",\n                \"loan_reference_number\": 18,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T20:36:12.000000Z\",\n                \"updated_at\": \"2023-01-29T20:36:12.000000Z\"\n            },\n            {\n                \"id\": \"9857b40d-9afd-4d9e-89d1-cf1417c9e33e\",\n                \"loan_reference_number\": 17,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T20:35:03.000000Z\",\n                \"updated_at\": \"2023-01-29T20:35:03.000000Z\"\n            },\n            {\n                \"id\": \"98577781-e8da-4772-a01f-73aa08f1e5d2\",\n                \"loan_reference_number\": 13,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T17:45:45.000000Z\",\n                \"updated_at\": \"2023-01-29T17:45:45.000000Z\"\n            },\n            {\n                \"id\": \"9857776d-af8d-4bbe-b54a-64d53b620131\",\n                \"loan_reference_number\": 12,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T17:45:32.000000Z\",\n                \"updated_at\": \"2023-01-29T17:45:32.000000Z\"\n            },\n            {\n                \"id\": \"985776ef-bff4-4b0f-8288-0d69c9073f48\",\n                \"loan_reference_number\": 11,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T17:44:10.000000Z\",\n                \"updated_at\": \"2023-01-29T17:44:10.000000Z\"\n            },\n            {\n                \"id\": \"985776d3-a984-45b6-83bf-e9629ae6241f\",\n                \"loan_reference_number\": 10,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 6,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 85000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-29T17:43:51.000000Z\",\n                \"updated_at\": \"2023-01-29T17:43:51.000000Z\"\n            },\n            {\n                \"id\": \"984f9f58-68b9-403a-b662-32d619029456\",\n                \"loan_reference_number\": 7,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 3,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 20000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-25T20:10:32.000000Z\",\n                \"updated_at\": \"2023-01-25T20:10:32.000000Z\"\n            },\n            {\n                \"id\": \"984f9f0f-9449-47c3-bb57-ca25a0a676ea\",\n                \"loan_reference_number\": 5,\n                \"customer_id\": \"0316453b-58ff-44fd-8c71-9d54343575c6\",\n                \"tenure\": 3,\n                \"tenure_type\": \"WEEKLY\",\n                \"currency\": \"INR\",\n                \"amount\": 20000,\n                \"approved_by\": null,\n                \"rejected_by\": null,\n                \"reject_reason\": null,\n                \"status\": \"PENDING\",\n                \"deleted_at\": null,\n                \"created_at\": \"2023-01-25T20:09:44.000000Z\",\n                \"updated_at\": \"2023-01-25T20:09:44.000000Z\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Register Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "1|vxvzUEk2x2obBinGD6KsX8wAgEKgEKoVB6tJUtA3",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Test 8\",\n    \"email\": \"test8@example.com\",\n    \"password\": \"abcd\",\n    \"phone_number\": 9846889308\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/auth/register/admin",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"register",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
