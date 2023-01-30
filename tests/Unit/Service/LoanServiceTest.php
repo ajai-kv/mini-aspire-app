@@ -12,7 +12,7 @@ class LoanServiceTest extends TestCase
 {
 
     // Tests for createLoan sevice function
-    public function test_if_it_create_new_loans()
+    public function testIfItCreateNewLoans()
     {
         $user = User::factory()->make();
         
@@ -41,7 +41,7 @@ class LoanServiceTest extends TestCase
     }
 
     // Tests for approveLoan sevice function
-    public function test_to_approve_a_loan()
+    public function testToApproveALoan()
     {
         $user = User::factory()->make();
         $loan_number='1';
@@ -52,7 +52,7 @@ class LoanServiceTest extends TestCase
         $this->assertSame($approved_message, $loanServiceStub->approveLoan($loan_number,$user));
     }
 
-    public function test_to_handle_exception_while_loan_approval()
+    public function testToHandleExceptionWhileLoanApproval()
     {
         $user = User::factory()->make();
         $loan_number='1';
@@ -64,7 +64,7 @@ class LoanServiceTest extends TestCase
     }
 
     // Tests for rejectLoan sevice function
-    public function test_to_reject_a_loan()
+    public function testToRejectALoan()
     {
         $user = User::factory()->make();
         $loan_number='1';
@@ -76,7 +76,7 @@ class LoanServiceTest extends TestCase
         $this->assertSame($rejected_message, $loanServiceStub->rejectLoan($loan_number,$reject_reason,$user));
     }
 
-    public function test_to_handle_exception_while_loan_rejection()
+    public function testToHandleExceptionWhileLoanRejection()
     {
         $user = User::factory()->make();
         $loan_number='1';
@@ -89,7 +89,7 @@ class LoanServiceTest extends TestCase
     }
 
     // Tests for getLoansByCustomer sevice function
-    public function test_to_get_loan_from_user_id()
+    public function testToGetLoanFromUserId()
     {
         $loan = [
             'customer_id'=>'d04da3cd-5cc2-4d0f-9d1d-cd5a3ad71e9e',
@@ -108,7 +108,7 @@ class LoanServiceTest extends TestCase
         $this->assertSame($loan, $loanServiceStub->getLoansByCustomer($loan['customer_id']));
     }
 
-    public function test_to_handle_exception_while_get_loan_from_user_id()
+    public function testToHandleExceptionWhileGetLoanFromUserId()
     {
         $loan = [
             'customer_id'=>'d04da3cd-5cc2-4d0f-9d1d-cd5a3ad71e9e',
@@ -130,7 +130,7 @@ class LoanServiceTest extends TestCase
     }
 
     // Tests for getLoansByAdmin sevice function
-    public function test_to_get_loan_for_admin_user()
+    public function testToGetLoanForAdminUser()
     {
         $loan = [
             'customer_id'=>'d04da3cd-5cc2-4d0f-9d1d-cd5a3ad71e9e',
@@ -149,7 +149,7 @@ class LoanServiceTest extends TestCase
         $this->assertSame($loan, $loanServiceStub->getLoansByAdmin($loan['customer_id']));
     }
 
-    public function test_to_handle_exception_while_get_loan_for_admin_user()
+    public function testToHandleExceptionWhileGetLoanForAdminUser()
     {
         $loan = [
             'customer_id'=>'d04da3cd-5cc2-4d0f-9d1d-cd5a3ad71e9e',
@@ -170,61 +170,8 @@ class LoanServiceTest extends TestCase
         $this->assertSame($get_loans_by_admin_exception, $loanServiceStub->getLoansByAdmin($loan['customer_id']));
     }
 
-    // Tests for processRepayment sevice function
-    // public function test_to_process_the_repayments_from_the_customer()
-    // {
-    //     $user = User::make([
-    //         'id' => '3f33ebbb-e1c2-450b-9879-382895554480',
-    //         'full_name' => fake()->name(),
-    //         'email' => fake()->unique()->safeEmail(),
-    //         'phone_number' => '9846889299',
-    //         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-    //         'remember_token' => Str::random(10),
-    //         'type' => UserType::CUSTOMER->value,
-    //         'is_active' => true
-    //     ]);
-
-    //     $repayment_details = [
-    //         'loan_number' => 'eba5801e-b19b-4a0d-89f6-fe13cf178a7d',
-    //         'currency' => 'USD',
-    //         'amount' => 1000,
-    //     ];
-    //     $success_message='Payment accounted successfully';
-    //     $loanServiceStub  = $this->createStub(LoanService::class);
-    //     $loanServiceStub->method('processRepayment')
-    //           ->willReturn($success_message);
-    //     $this->assertSame($success_message, $loanServiceStub->processRepayment($repayment_details, $user));
-    // }
-
-    // public function test_to_handle_exception_while_process_the_repayments_from_the_customer()
-    // {
-    //     $user = User::make([
-    //         'id' => '3f33ebbb-e1c2-450b-9879-382895554480',
-    //         'full_name' => fake()->name(),
-    //         'email' => fake()->unique()->safeEmail(),
-    //         'phone_number' => '9846889299',
-    //         'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-    //         'remember_token' => Str::random(10),
-    //         'type' => UserType::CUSTOMER->value,
-    //         'is_active' => true
-    //     ]);
-
-    //     $repayment_details = [
-    //         'loan_number' => 'eba5801e-b19b-4a0d-89f6-fe13cf178a7d',
-    //         'currency' => 'USD',
-    //         'amount' => 1000,
-    //     ];
-    //     $process_repayment_exception= new Exception();
-
-    //     $success_message='Payment accounted successfully';
-    //     $loanServiceStub  = $this->createStub(LoanService::class);
-    //     $loanServiceStub->method('processRepayment')
-    //           ->willReturn($process_repayment_exception);
-    //     $this->assertSame($process_repayment_exception, $loanServiceStub->processRepayment($repayment_details, $user));
-    // }
-
     // Tests for getLoanById sevice function
-    public function test_to_get_loan_from_loan_id()
+    public function testToGetLoanFromLoanId()
     {
         $user = User::factory()->make();
         $loan = [
@@ -244,7 +191,7 @@ class LoanServiceTest extends TestCase
         $this->assertSame($loan, $loanServiceStub->getLoanById('1',$user));
     }
 
-    public function test_to_handle_exception_while_get_loan_from_loan_id()
+    public function testToHandleExceptionWhileGetLoanFromLoanId()
     {
         $user = User::factory()->make();
         $loan = [

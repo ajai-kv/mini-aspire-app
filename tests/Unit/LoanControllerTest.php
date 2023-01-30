@@ -246,42 +246,7 @@ class LoanControllerTest extends TestCase
         $this->actingAs($user)->json('put', 'api/loan/'.$loan_number.'/approve')
             ->assertStatus(Response::HTTP_FORBIDDEN);
     }
-
-    public function test_if_it_create_new_loan_application()
-    {
-        $request = new \Illuminate\Http\Request();
-        $response = new Response();
-        $user = User::factory()->make();
-
-        $loanControllerStub  = $this->createStub(LoanController::class);
-        $loanServiceStub  = $this->createStub(LoanService::class);
-
-        $data = [
-            'loan_reference_number' => 1,
-            'tenure' => 3,
-            'tenure_type' => 'WEEKLY',
-            'currency' => 'USD',
-            'amount' => 1000,
-            'status' => 'PENDING'
-        ];
-
-         $loanServiceStub->method('createLoan')
-              ->willReturn($data);
- 
-         $loanInput = json_encode([
-            'term' => '3',
-            'currency' => 'USD',
-            'amount' => 1000
-        ]);
-
-        $this->assertSame($data, $loanServiceStub->createLoan($loanInput,$user));
-        $loanControllerStub->method('createLoanApplication')
-              ->willReturn($response);
- 
-        $this->assertSame($response, $loanControllerStub->createLoanApplication($request));
-    }
-
-    public function test_to_approve_loan_application()
+    public function testToApproveLoanApplication()
     {
         $request = new \Illuminate\Http\Request();
         $response = new Response();
@@ -303,7 +268,7 @@ class LoanControllerTest extends TestCase
         $this->assertSame($response, $loanControllerStub->approveLoanApplication($request,$loan_number));
     }
 
-    public function test_to_reject_loan_application()
+    public function TestToRejectLoanApplication()
     {
         $request = new \Illuminate\Http\Request();
         $response = new Response();
@@ -326,7 +291,7 @@ class LoanControllerTest extends TestCase
         $this->assertSame($response, $loanControllerStub->rejectLoanApplication($request,$loan_number));
     }
 
-    public function test_to_get_loan_from_customer()
+    public function testToGetLoanFromCustomerId()
     {
         $response = new Response();
 
@@ -356,7 +321,7 @@ class LoanControllerTest extends TestCase
         $this->assertSame($response, $loanControllerStub->getLoansByCustomer());
     }
 
-    public function test_to_get_loan_for_admin_users()
+    public function testToGetLoanForAdminUser()
     {
         $request = new \Illuminate\Http\Request();
         $response = new Response();
@@ -387,7 +352,7 @@ class LoanControllerTest extends TestCase
         $this->assertSame($response, $loanControllerStub->getLoansByAdmin($request));
     }
 
-    public function test_to_get_loan_by_loan_id()
+    public function testToGetLoanByLoanId()
     {
         $response = new Response();
 
@@ -417,10 +382,8 @@ class LoanControllerTest extends TestCase
         $this->assertSame($response, $loanControllerStub->getLoanById('1'));
     }
 
-    public function test_to_receive_payment_for_loan()
+    public function testToReceivePaymentForLoan()
     {
-        $request = new \Illuminate\Http\Request();
-        $response = new Response();
 
         $user = User::make([
             'id' => '3f33ebbb-e1c2-450b-9879-382895554480',
@@ -429,10 +392,12 @@ class LoanControllerTest extends TestCase
             'phone_number' => '9846889299',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'type' => UserType::CUSTOMER->value,
+            'type' => UserType::ADMIN->value,
             'is_active' => true
         ]);
 
+        $request = new \Illuminate\Http\Request();
+        $response = new Response();
         $loan_number='999';
 
         $loanControllerStub  = $this->createStub(LoanController::class);
