@@ -43,25 +43,44 @@ Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authenticatio
 
     git clone https://github.com/ajai-kv/mini-aspire-app.git
 
-### 2. Spin up the docker via Laravel Sail
+
+### 2. Unpack and Install dependencies
+
+    composer install
+
+- This will unpack and install all the dependencies mentioned in the composer.json file
+
+### 3. Run the database migrations
+
+    php artisan migrate
+
+- This will run the database migrations
+
+### 4. Rollback the migrations (optional)
+
+    php artisan migrate:rollback
+
+- This command can be used to rollback the migrations if needed
+
+### 5. Spin up the docker via Laravel Sail
 
     ./vendor/bin/sail up
 
 - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
 - This command will spin up the docker containers based on the configuration in docker-compose.yml
 
-### 3. Start the Artisan server
+### 6. Start the Artisan server
 
     php artisan serve
 
 - To start the Artisan server, use the following command
 - The server will be up and listening to http://localhost:8000
 
-### 4. Import the postman collection
+### 7. Import the postman collection
 
 - Import the postman collection shared to start playing around with the APIs
 
-### 4. For running test cases
+### 8. For running test cases
 
     .vendor/bin/phpunit
 
