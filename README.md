@@ -1,6 +1,6 @@
 # Mini-Aspire app
 
-An small independant application which simulates some basic functionalities related to loan management.
+A small independant application which simulates some basic functionalities related to loan management.
 
 There are mainly two kind of actors in the application
 
@@ -37,7 +37,7 @@ Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authenticatio
 
 ## Steps to spin up the application
 
-Before proceeding please ensure that you have PHP and Composer [https://getcomposer.org] installed on your system
+- Before proceeding please ensure that you have PHP and Composer [https://getcomposer.org] installed on your system
 
 ### 1. Clone the repository
 
@@ -45,20 +45,26 @@ Before proceeding please ensure that you have PHP and Composer [https://getcompo
 
 ### 2. Spin up the docker via Laravel Sail
 
-    Laravel Sail is a simple command line interface which can be used to manage the docker service. 
+    - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
 
     ./vendor/bin/sail up
 
-    This command will spin up the docker containers based on the configuration in docker-compose.yml
+    - This command will spin up the docker containers based on the configuration in docker-compose.yml
 
 ### 3. Start the Artisan server
 
-    To start the Artisan server, use the following command
+    - To start the Artisan server, use the following command
 
     php artisan serve
 
-    The server will be up and listening to http://localhost:8000
+    - The server will be up and listening to http://localhost:8000
 
 ### 4. Import the postman collection
 
-    Import the postman collection shared to start playing around with the APIs
+    - Import the postman collection shared to start playing around with the APIs
+
+### 4. For running test cases
+
+    .vendor/bin/phpunit
+
+    - This command will let the test cases to be executed
