@@ -69,7 +69,7 @@ Admin will be able to,
 
 ### 2. Unpack and Install dependencies
 
-    composer install
+    php composer.phar install
 
 - This will unpack and install all the dependencies mentioned in the composer.json file
 
@@ -79,31 +79,37 @@ Admin will be able to,
 
 - This will run the database migrations
 
-### 4. Rollback the migrations (optional)
+### 4. Generate a seeded admin user for the user table
+
+    php artisan db:seed
+
+- This will run the database migrations
+
+### 5. Rollback the migrations (optional)
 
     php artisan migrate:rollback
 
 - This command can be used to rollback the migrations if needed
 
-### 5. Spin up the docker via Laravel Sail
+### 6. Spin up the docker via Laravel Sail
 
     ./vendor/bin/sail up
 
 - Laravel Sail is a simple command line interface which can be used to manage the docker service. 
 - This command will spin up the docker containers based on the configuration in docker-compose.yml
 
-### 6. Start the Artisan server
+### 7. Start the Artisan server
 
     php artisan serve
 
 - To start the Artisan server, use the following command
 - The server will be up and listening to http://localhost:8000
 
-### 7. Import the postman collection
+### 8. Import the postman collection
 
 - Import the postman collection shared to start playing around with the APIs
 
-### 8. For running test cases
+### 9. Run test cases
 
     .vendor/bin/phpunit
 
