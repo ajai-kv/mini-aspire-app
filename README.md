@@ -1,13 +1,3 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-
 # Mini-Aspire app
 
 An small independant application which simulates some basic functionalities related to loan management.
@@ -16,6 +6,10 @@ There are mainly two kind of actors in the application
 
 - Admin
 - Customer
+
+- Customers can be onboarded into the application by registering thrugh the API (auth/register/customer)
+- Admin can be onboarded into the application by registering through the API (auth/register/admin)
+- Login from both Admin and Customer using the API (auth/login) is needed to use the further features of the application
 
 This application provides the following features,
 
@@ -45,17 +39,26 @@ Laravel Sanctum [https://laravel.com/docs/9.x/sanctum] is used for Authenticatio
 
 Before proceeding please ensure that you have PHP and Composer [https://getcomposer.org] installed on your system
 
-### 1.
-## About Laravel
+### 1. Clone the repository
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+    git clone https://github.com/ajai-kv/mini-aspire-app.git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 2. Spin up the docker via Laravel Sail
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    Laravel Sail is a simple command line interface which can be used to manage the docker service. 
+
+    ./vendor/bin/sail up
+
+    This command will spin up the docker containers based on the configuration in docker-compose.yml
+
+### 3. Start the Artisan server
+
+    To start the Artisan server, use the following command
+
+    php artisan serve
+
+    The server will be up and listening to http://localhost:8000
+
+### 4. Import the postman collection
+
+    Import the postman collection shared to start playing around with the APIs
